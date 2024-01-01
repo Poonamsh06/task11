@@ -1,71 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:task2/admin.dart';
-import 'package:task2/login.dart';
+import 'package:task2/controllers/signup_controller.dart';
+import 'package:task2/views/login_view.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class SignupPage extends StatelessWidget {
+  final SignupController controller = Get.put(SignupController());
 
   @override
   Widget build(BuildContext context) {
-    final DateTime timestamp = DateTime.now();
-    final TextEditingController email = TextEditingController();
-    final TextEditingController password = TextEditingController();
-    final userName = TextEditingController();
-    final TextEditingController phone = TextEditingController();
-
-    Future<void> signUp() async {
-      try {
-        String emailOrPhone = email.text.trim();
-
-        UserCredential userCredential;
-
-        if (RegExp(
-                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-            .hasMatch(emailOrPhone)) {
-          userCredential = await _auth.createUserWithEmailAndPassword(
-            email: emailOrPhone,
-            password: password.text,
-          );
-
-          await _firestore
-              .collection('users')
-              .doc(userCredential.user?.uid)
-              .set({
-            'username': userName.text,
-            'email or phone no': emailOrPhone,
-            'timestamp': timestamp,
-            'phone': phone.text,
-            'password': password.text,
-          });
-        } else {
-          userCredential = await _auth.createUserWithEmailAndPassword(
-            email: emailOrPhone,
-            password: password.text,
-          );
-
-          await userCredential.user
-              ?.updatePhoneNumber(PhoneAuthProvider.credential(
-            verificationId: 'dummy_verification_id',
-            smsCode: emailOrPhone,
-          ));
-        }
-
-        print('User registered successfully!');
-      } catch (e) {
-        print('Error during registration: $e');
-      }
-    }
-
     return Scaffold(
       body: ListView(
         children: [
@@ -83,7 +26,7 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 child: TextField(
-                  controller: userName,
+                  controller: controller.userName,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Enter user name',
@@ -93,7 +36,7 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 child: TextField(
-                  controller: email,
+                  controller: controller.email,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Enter your email',
@@ -103,7 +46,7 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 child: TextField(
-                  controller: phone,
+                  controller: controller.phone,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Enter your phone Number',
@@ -113,28 +56,19 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 child: TextField(
-                  controller: password,
+                  controller: controller.password,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Enter password',
                   ),
                 ),
               ),
-              // New user, navigate to admin page
-
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () async {
-                      await signUp();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const AdminPage()),
-                      );
-                    },
+                    onPressed: controller.signUp,
                     child: const Text("Sign Up"),
                   ),
                 ),
@@ -153,11 +87,7 @@ class _HomePageState extends State<HomePage> {
                     width: MediaQuery.of(context).size.width * 0.02,
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        )),
+                    onTap: () => Get.to(() => LoginPage()),
                     child: Text(
                       "Sign in",
                       style: TextStyle(fontSize: 15, color: Colors.purple),
