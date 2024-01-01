@@ -68,6 +68,12 @@ class SignupPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      // side: BorderSide(color: Colors.yellow, width: 5),
+
+                      shape: BeveledRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(4))),
+                    ),
                     onPressed: controller.signUp,
                     child: const Text("Sign Up"),
                   ),
@@ -89,7 +95,7 @@ class SignupPage extends StatelessWidget {
                   GestureDetector(
                     onTap: () => Get.to(() => LoginPage()),
                     child: Text(
-                      "Sign in",
+                      "Login",
                       style: TextStyle(fontSize: 15, color: Colors.purple),
                     ),
                   ),
