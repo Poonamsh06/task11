@@ -33,7 +33,7 @@ class LoginPage extends StatelessWidget {
                   controller: controller.emailOrPhone,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Enter your email',
+                    hintText: 'Enter your email/phoneno/username',
                   ),
                 ),
               ),
@@ -50,10 +50,19 @@ class LoginPage extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      // side: BorderSide(color: Colors.yellow, width: 5),
+
+                      shape: BeveledRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(4))),
+                    ),
                     onPressed: controller.signIn,
-                    child: const Text("Sign In"),
+                    child: const Text("Login",
+                        style: TextStyle(
+                          fontSize: 17,
+                        )),
                   ),
                 ),
               ),

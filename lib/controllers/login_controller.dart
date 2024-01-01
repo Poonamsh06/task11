@@ -9,10 +9,14 @@ class LoginController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController emailOrPhone = TextEditingController();
   final TextEditingController password = TextEditingController();
+  final userName = TextEditingController();
+  final TextEditingController phone = TextEditingController();
 
   Future<void> signIn() async {
     try {
       String emailOrPhoneNumber = emailOrPhone.text.trim();
+      String phoneNumber = phone.text.trim();
+      String username = userName.text.trim();
       String enteredPassword = password.text;
 
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
